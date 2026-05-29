@@ -13,7 +13,7 @@ namespace TaskManager_New.Services
         /// <summary>
         /// Получение задачи по названию
         /// </summary>
-        Task<TaskItem?> GetTaskByName(string title);
+        Task<TaskItem?> GetTaskByTitle(string title);
 
         /// <summary>
         /// Получение задачи по Id
@@ -23,6 +23,16 @@ namespace TaskManager_New.Services
         /// <summary>
         /// Получение задач пользователя
         /// </summary>
-        Task<List<TaskItem?>> GetUserTask(int id);
+        Task<List<TaskItem>> GetUserTask(int id);
+
+        /// <summary>
+        /// Создание задачи
+        /// </summary>
+        Task<TaskItem> CreateTask(string title, string description, int userId);
+
+        /// <summary>
+        /// Удаление задачи
+        /// </summary>
+        Task<bool> DeleteTask(string? title, int? userId);
     }
 }
