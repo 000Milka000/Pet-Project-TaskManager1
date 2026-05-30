@@ -18,7 +18,15 @@ namespace TaskManager_New.Data
         public DbSet<User> Users { get; set; }
         public DbSet<TaskItem> TaskItems { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder); 
 
+            // Потом свою логику
+            modelBuilder.Entity<TaskItem>()
+                .HasIndex(t => new { t.UserId, t.Title })
+                .IsUnique();
+        }
 
     }
 }

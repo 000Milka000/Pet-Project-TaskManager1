@@ -1,64 +1,87 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using TaskManager_New.Data;
 using TaskManager_New.DTOs;
-using TaskManager_New.Models;
 using TaskManager_New.Services;
-using TaskManager_New.Services.Task;
+
 
 namespace TaskManager_New.Controllers
 {
     [ApiController]
     public class TaskControllers : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
         private readonly ITaskServices _taskServices;
 
-        public TaskControllers(ApplicationDbContext context, ITaskServices taskServices)
+        public TaskControllers(ITaskServices taskServices)
         {
-            _context = context;
             _taskServices = taskServices;
         }
 
         [HttpGet]
         [Route("Tasks/GetAllTasks")]
-        public async Task<IEnumerable<TaskItem>> GetAllTasks()
+        public async Task<IActionResult> GetAllTasks()
         {
-            var allTasks = await _taskServices.GetAllTask();
-            return allTasks;
+            try
+            {
+                var allTasks = await _taskServices.GetAllTask();
+                return Ok(allTasks);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Внутренняя ошибка сервера");
+            }
         }
 
         [HttpGet]
         [Route("Tasks/GetTaskByTitle")]
-        public async Task<TaskItem?> GetTaskByName(string title)
+        public async Task<IActionResult> GetTaskByName(string title)
         {
-            var taskByName = await _taskServices.GetTaskByTitle(title);
-            return taskByName;
+            try
+            {
+                var taskByName = await _taskServices.GetTaskByTitle(title);
+                if (taskByName == null)
+                {
+                    return NotFound($"Задача с названием '{title}' не найдена");
+                }
+                return Ok(taskByName);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Внутренняя ошибка сервера");
+            }
         }
 
         [HttpPost]
         [Route("Tasks/CreateTask")]
-        public async Task<TaskItem> CreateTask([FromBody] TaskApiModel model)
+        public async Task<IActionResult> CreateTask([FromBody] TaskApiModel model)
         {
             try
             {
                 var task = await _taskServices.CreateTask(model.Title, model.Description, model.UserId);
-                return task;
+                return Ok(task);
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
-                throw;
+                return StatusCode(500, ex.Message);
             }
-            
         }
 
         [HttpDelete]
         [Route("Tasks/DeleteTask")]
-        public async Task<bool> DeleteTask(string title, int userId)
+        public async Task<IActionResult> DeleteTask(string title, int userId)
         {
-            var result = await _taskServices.DeleteTask(title, userId);
-            return result;
+            try
+            {
+                var result = await _taskServices.DeleteTask(title, userId);
+                if (!result)
+                {
+                    return NotFound($"Задача с названием '{title}' для пользователя {userId} не найдена");
+                }
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
         
     }

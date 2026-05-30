@@ -11,19 +11,17 @@ namespace TaskManager_New.Services.Task
     public class TaskServices : ITaskServices
     {
         private readonly ApplicationDbContext _context;
-        private readonly ILogger<TaskServices> _logger;
 
-        public TaskServices(ApplicationDbContext context, ILogger<TaskServices> logger)
+        public TaskServices(ApplicationDbContext context)
         {
             _context = context;
-            _logger = logger;
         }
 
 
         /// <summary>
         /// Получение всех задач
         /// </summary>
-        public async Task <IEnumerable<TaskItem>> GetAllTask()
+        public async Task<IEnumerable<TaskItem>> GetAllTask()
         {
             return await _context.TaskItems.OrderBy(p => p.Id).ToListAsync();
         }
@@ -31,53 +29,43 @@ namespace TaskManager_New.Services.Task
         /// <summary>
         /// Получение задачи по названию
         /// </summary>
+        /// /// <param name="tiitle">Название задачи</param>
         public async Task<TaskItem?> GetTaskByTitle(string title)
         {
-            var task = await _context.TaskItems.FirstOrDefaultAsync(a => a.Title == title);
-            if (task == null)
-            {
-                _logger.LogWarning($"Задача '{title}' не найдена.");
-            }
-            return task;
+            return await _context.TaskItems.FirstOrDefaultAsync(a => a.Title == title);
+        }
 
+        /// <summary>
+        /// Получение задач пользователя
+        /// </summary>
+        public async Task<List<TaskItem>> GetUserTasks(int id)
+        {
+            return await _context.TaskItems
+                .Where(t => t.UserId == id)  
+                .ToListAsync();
         }
 
 
         /// <summary>
         /// Получение задачи по Id
         /// </summary>
+        /// <param name="id">id задачи</param> 
         public async Task<TaskItem?> GetTaskById(int id)
         {
-            var task = await _context.TaskItems.FirstOrDefaultAsync(a => a.Id == id);
-            if (task == null)
-            {
-                _logger.LogWarning($"Задача с id '{id}' не найдена.");
-            }
-            return task;
+            return await _context.TaskItems.FirstOrDefaultAsync(a => a.Id == id);
         }
 
-
-        /// <summary>
-        /// Получение задач пользователя
-        /// </summary>
-        public async Task<List<TaskItem>> GetUserTask(int id)
-        {
-            try {
-                var taskList = await _context.TaskItems.Where(a => a.UserId == id).ToListAsync();
-                return taskList!;
-            }
-            catch (Exception ex) 
-            {
-                _logger.LogError(ex, $"Ошибка получения задач для пользователя {id}");
-                throw;
-            }
-        }
 
         /// <summary>
         /// Создание задачи
         /// </summary>
+        /// <param name="title">Название задачи</param>
+        /// <param name="description">Описание задачи</param>
+        /// <param name="userId">id пользователя</param>
         public async Task<TaskItem> CreateTask(string title, string description, int userId)
         {
+            try
+            {
                 var task = new TaskItem
                 {
                     Title = title,
@@ -87,24 +75,34 @@ namespace TaskManager_New.Services.Task
 
                 _context.Add(task);
                 await _context.SaveChangesAsync();
-
                 return task;
+            }
+            catch (DbUpdateException ex) when (ex.InnerException is PostgresException pg && pg.SqlState == "23505")
+            {
+                throw new Exception($"У пользователя с ID '{userId}' уже есть задача с названием '{title}'");
+            }
+            catch (DbUpdateException ex) when (ex.InnerException is PostgresException pg && pg.SqlState == "23503")
+            {
+                throw new Exception($"Пользователь с ID '{userId}' не существует");
+            }
         }
+
 
         /// <summary>
         /// Удаление задачи
         /// </summary>
-        public async Task<bool> DeleteTask(string? title, int? userId)
+        /// <param name="title"></param>
+        /// <param name="userId">id пользователя</param>
+        public async Task<bool> DeleteTask(string title, int userId)
         {
             var task = await _context.TaskItems.FirstOrDefaultAsync(a => a.Title == title && a.UserId == userId);
             if (task == null)
-            {
                 return false;
-            } 
-            
+
             _context.Remove(task);
             await _context.SaveChangesAsync();
             return true;
         }
-    }
+    
+}
 }

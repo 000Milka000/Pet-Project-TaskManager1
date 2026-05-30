@@ -6,12 +6,14 @@ using Swashbuckle.AspNetCore;
 using TaskManager_New.Data;
 using TaskManager_New.Services;
 using TaskManager_New.Services.Task;
+using TaskManager_New.Services.Users;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<ITaskServices, TaskServices>();
+builder.Services.AddScoped<IUserServices, UserServices>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
