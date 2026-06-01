@@ -14,5 +14,10 @@ namespace TaskManager_New.Services
         /// Создание пользователя
         /// </summary>
         Task<User> CreateUser(UserApiModel model);
+
+        /// <summary>
+        /// Удаление пользователя с его задачами
+        /// </summary>
+        Task<bool> DeleteUser(string userLogin);
     }
 }

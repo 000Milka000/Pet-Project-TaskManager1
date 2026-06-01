@@ -57,8 +57,34 @@ namespace TaskManager_New.Services.Users
         }
 
         /// <summary>
-        /// Удаление пользователя
+        /// Удаление пользователя с его задачами
         /// </summary>
+        public async Task<bool> DeleteUser(string userLogin)
+        {
+                var idUser = await _context.Users
+                    .Where(a => a.Login == userLogin)
+                    .Select(x => x.Id)
+                    .FirstOrDefaultAsync();
+
+                if(idUser != 0) {
+                    var userToDelete = await _context.Users.FindAsync(idUser);
+                    if(userToDelete != null)
+                    {
+                        var taskToDelete = await _context.TaskItems
+                        .Where(u => u.UserId == idUser)
+                        .ToListAsync();
+
+                        _context.Users.Remove(userToDelete);
+                        _context.TaskItems.RemoveRange(taskToDelete);
+                        await _context.SaveChangesAsync();
+                    }
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+        }
 
 
 

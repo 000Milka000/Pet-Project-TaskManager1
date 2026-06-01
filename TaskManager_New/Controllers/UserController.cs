@@ -64,5 +64,34 @@ namespace TaskManager_New.Controllers
             }
             
         }
+
+        [HttpDelete]
+        [Route("User/DeleteUser")]
+        public async Task<IActionResult> DeleteUser(string userLogin)
+        {
+            try
+            {
+                if(userLogin != null && userLogin.Length != 0)
+                {
+                    bool deleted = await _userSrevices.DeleteUser(userLogin);
+                    if(deleted)
+                    {
+                        return Ok();
+                    }
+                    else
+                    {
+                        return NotFound($"Пользователь с логином '{userLogin}' не найден.");
+                    }
+                }
+                else
+                {
+                    return BadRequest($"Не введен логин пользователя.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Внутренняя ошибка сервера при удалении пользователя");
+            }
+        }
     }
 }
