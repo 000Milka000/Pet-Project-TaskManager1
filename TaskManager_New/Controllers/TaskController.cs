@@ -6,33 +6,44 @@ using TaskManager_New.Services;
 namespace TaskManager_New.Controllers
 {
     [ApiController]
-    public class TaskControllers : ControllerBase
+    public class TaskController : ControllerBase
     {
         private readonly ITaskServices _taskServices;
+        private readonly ILogger <TaskController> _logger;
 
-        public TaskControllers(ITaskServices taskServices)
+        public TaskController(ITaskServices taskServices, ILogger <TaskController> logger)
         {
             _taskServices = taskServices;
+            _logger = logger;
         }
 
+        /// <summary>
+        /// Получение всех задач
+        /// </summary>
         [HttpGet]
         [Route("Tasks/GetAllTasks")]
         public async Task<IActionResult> GetAllTasks()
         {
             try
             {
-                var allTasks = await _taskServices.GetAllTask();
+                var allTasks = await _taskServices.GetAllTasks();
                 return Ok(allTasks);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, "Внутренняя ошибка сервера");
+                _logger.LogError(ex, "Ошибка при получении всех задач");
+                return StatusCode(500, "Внутренняя ошибка сервера при получение всех задач.");
             }
         }
 
+
+        /// <summary>
+        /// Получение задачи по ее названию
+        /// </summary>
+        /// <param name="title">Название задачи</param>
         [HttpGet]
         [Route("Tasks/GetTaskByTitle")]
-        public async Task<IActionResult> GetTaskByName(string title)
+        public async Task<IActionResult> GetTaskByName([FromQuery] string title)
         {
             try
             {
@@ -45,10 +56,16 @@ namespace TaskManager_New.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, "Внутренняя ошибка сервера");
+                _logger.LogError(ex, $"Ошибка получения задачи {title}");
+                return StatusCode(500, "Внутренняя ошибка сервера при получении задачи.");
             }
         }
 
+
+        /// <summary>
+        /// Создание новой задачи для пользователя
+        /// </summary>
+        /// <param name="model">Модель задачи</param>
         [HttpPost]
         [Route("Tasks/CreateTask")]
         public async Task<IActionResult> CreateTask([FromBody] TaskApiModel model)
@@ -56,17 +73,28 @@ namespace TaskManager_New.Controllers
             try
             {
                 var task = await _taskServices.CreateTask(model.Title, model.Description, model.UserId);
-                return Ok(task);
+                 return Ok(task);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Conflict(ex.Message); 
             }
             catch (Exception ex)
             {
-                return StatusCode(500, ex.Message);
+                _logger.LogError(ex, $"Ошибка при попытке создания задачи {model.Title}");
+                return StatusCode(500, "Внутренняя ошибка сервера при создании задачи.");
             }
         }
 
+
+        /// <summary>
+        /// Удаление задачи по названию для конкретного пользователя
+        /// </summary>
+        /// <param name="title">Название удаляемой задачи</param>
+        /// <param name="userId">ID владельца задачи</param>
         [HttpDelete]
         [Route("Tasks/DeleteTask")]
-        public async Task<IActionResult> DeleteTask(string title, int userId)
+        public async Task<IActionResult> DeleteTask([FromQuery] string title, [FromQuery] int userId)
         {
             try
             {
@@ -80,7 +108,8 @@ namespace TaskManager_New.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, ex.Message);
+                _logger.LogError(ex, $"Ошибка при попытке удаления задачи {title}");
+                return StatusCode(500, $"Ошибка при удалении задачи {title}");
             }
         }
         

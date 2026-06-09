@@ -7,7 +7,7 @@ namespace TaskManager_New.Services
         /// <summary>
         /// Получение всех задач
         /// </summary>
-        Task<IEnumerable<TaskItem>> GetAllTask();
+        Task<IEnumerable<TaskItem>> GetAllTasks();
 
 
         /// <summary>

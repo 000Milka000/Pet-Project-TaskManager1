@@ -21,8 +21,6 @@ namespace TaskManager_New.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder); 
-
-            // Потом свою логику
             modelBuilder.Entity<TaskItem>()
                 .HasIndex(t => new { t.UserId, t.Title })
                 .IsUnique();

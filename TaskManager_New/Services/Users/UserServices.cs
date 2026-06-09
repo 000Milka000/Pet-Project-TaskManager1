@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BCrypt.Net;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using System.Xml.Linq;
 using TaskManager_New.Data;
@@ -22,39 +24,46 @@ namespace TaskManager_New.Services.Users
         /// <summary>
         /// Получение всех пользователей
         /// </summary>
-        public async Task<IEnumerable<User>> GetAllUsers()
+        public async Task<IEnumerable<UserResponse>> GetAllUsers()
         {
-            return await _context.Users.OrderBy(x => x.Id).ToListAsync();
+            return await _context.Users
+                .OrderBy(x => x.Id)
+                .Select(u => new UserResponse
+                {
+                    Id = u.Id,
+                    Name = u.Name,
+                    Login = u.Login,
+                    CreatedAt = u.CreatedAt
+                })
+                .ToListAsync();
         }
 
 
         /// <summary>
         /// Создание пользователя
         /// </summary>
-        public async Task<User> CreateUser(UserApiModel model)
+        public async Task<string> CreateUser(UserApiModel model)
         {
-            try
-            {
+                var hasUser = await _context.Users
+                    .FirstOrDefaultAsync(a => a.Login == model.Login);
+                if (hasUser != null)
+                {
+                    throw new InvalidOperationException($"Пользователь с логином '{model.Login}' уже существует");
+                }
+
                 var user = new User
                 {
                     Name = model.Name,
                     Login = model.Login,
-                    Password = model.Password,
+                    Password = BCrypt.Net.BCrypt.HashPassword(model.Password),
                     CreatedAt = DateTime.UtcNow
                 };
                 _context.Add(user);
                 await _context.SaveChangesAsync();
-                return user;
+                var result = $"Пользователь {user.Name} создан. Логин: {user.Login}. ID: {user.Id}.";
+                return result;
             }
-            catch (DbUpdateException ex) when (ex.InnerException is PostgresException pg && pg.SqlState == "23505")
-            {
-                throw new Exception($"Пользователь с логином '{model.Login}' уже существует");
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Ошибка при создании пользователя: {ex.Message}");
-            }
-        }
+        
 
         /// <summary>
         /// Удаление пользователя с его задачами
@@ -77,13 +86,11 @@ namespace TaskManager_New.Services.Users
                         _context.Users.Remove(userToDelete);
                         _context.TaskItems.RemoveRange(taskToDelete);
                         await _context.SaveChangesAsync();
+                        return true;
                     }
-                    return true;
-                }
-                else
-                {
                     return false;
                 }
+                    return false;
         }
 
 

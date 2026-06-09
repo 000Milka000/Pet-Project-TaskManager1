@@ -8,12 +8,12 @@ namespace TaskManager_New.Services
         /// <summary>
         /// Получение всех пользователей
         /// </summary>
-        Task<IEnumerable<User>> GetAllUsers();
+        Task<IEnumerable<UserResponse>> GetAllUsers();
 
         /// <summary>
         /// Создание пользователя
         /// </summary>
-        Task<User> CreateUser(UserApiModel model);
+        Task<string> CreateUser(UserApiModel model);
 
         /// <summary>
         /// Удаление пользователя с его задачами

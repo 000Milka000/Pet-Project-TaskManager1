@@ -21,7 +21,7 @@ namespace TaskManager_New.Services.Task
         /// <summary>
         /// Получение всех задач
         /// </summary>
-        public async Task<IEnumerable<TaskItem>> GetAllTask()
+        public async Task<IEnumerable<TaskItem>> GetAllTasks()
         {
             return await _context.TaskItems.OrderBy(p => p.Id).ToListAsync();
         }
@@ -79,11 +79,11 @@ namespace TaskManager_New.Services.Task
             }
             catch (DbUpdateException ex) when (ex.InnerException is PostgresException pg && pg.SqlState == "23505")
             {
-                throw new Exception($"У пользователя с ID '{userId}' уже есть задача с названием '{title}'");
+                throw new InvalidOperationException($"У пользователя с ID '{userId}' уже есть задача с названием '{title}'");
             }
             catch (DbUpdateException ex) when (ex.InnerException is PostgresException pg && pg.SqlState == "23503")
             {
-                throw new Exception($"Пользователь с ID '{userId}' не существует");
+                throw new InvalidOperationException($"Пользователь с ID '{userId}' не существует");
             }
         }
 
