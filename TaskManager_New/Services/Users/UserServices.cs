@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
+using System.Reflection.Metadata.Ecma335;
 using System.Xml.Linq;
 using TaskManager_New.Data;
 using TaskManager_New.DTOs;
@@ -63,37 +64,29 @@ namespace TaskManager_New.Services.Users
                 var result = $"Пользователь {user.Name} создан. Логин: {user.Login}. ID: {user.Id}.";
                 return result;
             }
-        
+
 
         /// <summary>
         /// Удаление пользователя с его задачами
         /// </summary>
         public async Task<bool> DeleteUser(string userLogin)
         {
-                var idUser = await _context.Users
-                    .Where(a => a.Login == userLogin)
-                    .Select(x => x.Id)
-                    .FirstOrDefaultAsync();
-
-                if(idUser != 0) {
-                    var userToDelete = await _context.Users.FindAsync(idUser);
-                    if(userToDelete != null)
-                    {
-                        var taskToDelete = await _context.TaskItems
-                        .Where(u => u.UserId == idUser)
+            var userToDelete = await _context.Users
+                .FirstOrDefaultAsync(a => a.Login == userLogin);
+            if (userToDelete != null)
+            {
+                var taskToDelete = await _context.TaskItems
+                        .Where(u => u.UserId == userToDelete.Id)
                         .ToListAsync();
 
-                        _context.Users.Remove(userToDelete);
-                        _context.TaskItems.RemoveRange(taskToDelete);
-                        await _context.SaveChangesAsync();
-                        return true;
-                    }
-                    return false;
-                }
-                    return false;
+                _context.Users.Remove(userToDelete);
+                _context.TaskItems.RemoveRange(taskToDelete);
+
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            return false;
         }
 
-
-
-    }
+        }
 }
