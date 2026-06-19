@@ -13,7 +13,7 @@ namespace TaskManager_New.Services
         /// <summary>
         /// Получение задачи по названию
         /// </summary>
-        Task<TaskItem?> GetTaskByTitle(string title);
+        Task<IEnumerable<TaskItem>> GetTasksByTitle(string title);
 
         /// <summary>
         /// Получение задач пользователя

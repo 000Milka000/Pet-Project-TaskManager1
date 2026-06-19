@@ -19,4 +19,9 @@
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.18.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="src\app\services\" />
+    <Folder Include="src\app\components\" />
+  </ItemGroup>
+
 </Project>

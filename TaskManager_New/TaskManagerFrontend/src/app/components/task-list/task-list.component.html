@@ -1,0 +1,25 @@
+<div class="container">
+    <h2>📋 Список задач</h2>
+
+    <div *ngIf="isLoading" class="loading">⏳ Загрузка...</div>
+
+    <div *ngIf="error" class="error">❌ {{ error }}</div>
+
+    <div *ngIf="!isLoading && !error">
+        <div *ngIf="tasks.length === 0" class="empty">📭 Нет задач</div>
+
+        <div *ngFor="let task of tasks" class="task-card">
+            <div class="task-header">
+                <h3>{{ task.title }}</h3>
+                <button (click)="deleteTask(task.title, task.userId)" class="delete-btn">
+                    🗑 Удалить
+                </button>
+            </div>
+            <p class="description">{{ task.description }}</p>
+            <div class="task-footer">
+                <span>👤 User ID: {{ task.userId }}</span>
+                <span>#{{ task.id }}</span>
+            </div>
+        </div>
+    </div>
+</div>

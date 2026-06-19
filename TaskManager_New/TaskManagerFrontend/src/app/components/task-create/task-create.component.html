@@ -1,0 +1,50 @@
+<div class = "container">
+    <h2>Создание задачи</h2>
+
+    <div *ngIf = "isLoading" class = "loading">Загрузка...</div>
+
+    <div class = "task-create">
+        <button (click) = "addTask()">Добавить</button>
+        <div *ngIf="showForm" class="task-group">
+            <div class="form-group">
+                <label>Название</label>
+                <br>
+                <input 
+                    type="text" 
+                    [(ngModel)]="task.title"
+                    placeholder="Введите название задачи"
+                    class="form-control"
+                    required >
+            </div>
+            
+            <div class = "form-group">
+                <label>Описание</label>
+                <br>
+                <textarea
+                    [(ngModel)]="task.description" 
+                    placeholder="Введите описание"
+                    class="form-control"
+                    rows="2"></textarea>
+            </div>
+            
+            <div class = "form-group">
+                <label>ID пользователя</label>
+                <br>
+                <input 
+                    type="number" 
+                    [(ngModel)]="task.userId"
+                    placeholder="Введите ID пользователя"
+                    class = "form-control"
+                    required>
+            </div>
+            <button (click) = "createTask()">Создать</button>
+            <button (click) = "cancelForm()">Отмена</button>
+        </div>
+        
+    </div>
+
+    <div *ngIf="successMessage" class="success">Задача создана!</div>
+    <div *ngIf="errorMessage" class="error">Задача не создана, возникла ошибка</div>
+
+
+</div>

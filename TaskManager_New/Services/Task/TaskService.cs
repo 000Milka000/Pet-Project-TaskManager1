@@ -30,9 +30,11 @@ namespace TaskManager_New.Services.Task
         /// Получение задачи по названию
         /// </summary>
         /// /// <param name="tiitle">Название задачи</param>
-        public async Task<TaskItem?> GetTaskByTitle(string title)
+        public async Task<IEnumerable<TaskItem>> GetTasksByTitle(string title)
         {
-            return await _context.TaskItems.FirstOrDefaultAsync(a => a.Title == title);
+            return await _context.TaskItems
+                .Where(a => a.Title == title)
+                .ToListAsync();
         }
 
         /// <summary>

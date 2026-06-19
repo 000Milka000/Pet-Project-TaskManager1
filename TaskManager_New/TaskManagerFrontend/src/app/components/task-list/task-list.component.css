@@ -1,0 +1,68 @@
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.loading {
+    text-align: center;
+    color: #666;
+    padding: 40px;
+}
+
+.error {
+    color: red;
+    padding: 10px;
+    background: #ffebee;
+    border-radius: 4px;
+}
+
+.empty {
+    text-align: center;
+    padding: 40px;
+    color: #999;
+}
+
+.task-card {
+    border: 1px solid #e0e0e0;
+    padding: 15px 20px;
+    margin: 10px 0;
+    border-radius: 8px;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.task-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.task-header h3 {
+    margin: 0;
+}
+
+.delete-btn {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 5px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.delete-btn:hover {
+    background: #c82333;
+}
+
+.description {
+    color: #555;
+    margin: 8px 0;
+}
+
+.task-footer {
+    font-size: 14px;
+    color: #888;
+    display: flex;
+    gap: 20px;
+}

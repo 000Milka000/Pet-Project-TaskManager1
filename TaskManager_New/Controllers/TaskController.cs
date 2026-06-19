@@ -47,7 +47,7 @@ namespace TaskManager_New.Controllers
         {
             try
             {
-                var taskByName = await _taskServices.GetTaskByTitle(title);
+                var taskByName = await _taskServices.GetTasksByTitle(title);
                 if (taskByName == null)
                 {
                     return NotFound($"Задача с названием '{title}' не найдена");
