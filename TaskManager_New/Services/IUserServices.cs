@@ -1,5 +1,5 @@
 ﻿using TaskManager_New.DTOs;
-using TaskManager_New.Models;
+using TaskManager.Models;
 
 namespace TaskManager_New.Services
 {

@@ -2,8 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using TaskManager_New.Data;
-using TaskManager_New.Models;
-
+using TaskManager.Models;
 
 
 namespace TaskManager_New.Services.Task

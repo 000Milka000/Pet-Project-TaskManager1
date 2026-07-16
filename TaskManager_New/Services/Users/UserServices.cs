@@ -6,9 +6,7 @@ using System.Reflection.Metadata.Ecma335;
 using System.Xml.Linq;
 using TaskManager_New.Data;
 using TaskManager_New.DTOs;
-using TaskManager_New.Models;
-
-
+using TaskManager.Models;
 
 namespace TaskManager_New.Services.Users
 {
@@ -45,25 +43,25 @@ namespace TaskManager_New.Services.Users
         /// </summary>
         public async Task<string> CreateUser(UserApiModel model)
         {
-                var hasUser = await _context.Users
-                    .FirstOrDefaultAsync(a => a.Login == model.Login);
-                if (hasUser != null)
-                {
-                    throw new InvalidOperationException($"Пользователь с логином '{model.Login}' уже существует");
-                }
-
-                var user = new User
-                {
-                    Name = model.Name,
-                    Login = model.Login,
-                    Password = BCrypt.Net.BCrypt.HashPassword(model.Password),
-                    CreatedAt = DateTime.UtcNow
-                };
-                _context.Add(user);
-                await _context.SaveChangesAsync();
-                var result = $"Пользователь {user.Name} создан. Логин: {user.Login}. ID: {user.Id}.";
-                return result;
+            var hasUser = await _context.Users
+                .FirstOrDefaultAsync(a => a.Login == model.Login);
+            if (hasUser != null)
+            {
+                throw new InvalidOperationException($"Пользователь с логином '{model.Login}' уже существует");
             }
+
+            var user = new User
+            {
+                Name = model.Name,
+                Login = model.Login,
+                Password = BCrypt.Net.BCrypt.HashPassword(model.Password),
+                CreatedAt = DateTime.UtcNow
+            };
+            _context.Add(user);
+            await _context.SaveChangesAsync();
+            var result = $"Пользователь {user.Name} создан. Логин: {user.Login}. ID: {user.Id}.";
+            return result;
+        }
 
 
         /// <summary>
@@ -88,5 +86,55 @@ namespace TaskManager_New.Services.Users
             return false;
         }
 
-        }
+
+
+    }
 }
+
+
+//public class Solution
+//{
+//    public bool IsPalindrome(int x)
+//    {
+//        if(x.ToString() == string.Concat(cleaned.Reverse())
+//        {
+//            return true;
+//        }
+//        else
+//        {
+//            return false;
+//        }
+
+
+//    }
+
+//    public int Reverse(int x)
+//    {
+//        long num;
+//        if (x == int.MinValue) return 0;
+//        if (x < 0)
+//        {
+//            num = (int.Parse(Math.Abs(x).ToString().Reverse().ToArray())) * (-1);
+//        }
+//        else
+//        {
+//            num = int.Parse(x.ToString().Reverse().ToArray());
+//        }
+
+//        if(num > int.MaxValue || num < int.MinValue)
+//        {
+//            return 0;
+//        }
+//        else
+//        {
+//            return int(num);
+//        }
+//    }
+
+
+//    public static void Main()
+//    {
+//        int[] nums = { 2, 7, 11, 15 };
+//        Console.WriteLine(Solution.TwoSum(nums, 9));
+//    }
+//}

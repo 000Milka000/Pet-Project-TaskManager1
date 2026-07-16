@@ -1,4 +1,4 @@
-﻿using TaskManager_New.Models;
+﻿using TaskManager.Models;
 
 namespace TaskManager_New.DTOs
 {

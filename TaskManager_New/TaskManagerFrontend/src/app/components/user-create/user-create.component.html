@@ -1,0 +1,47 @@
+<div class="container">
+    <h2>Создание пользователя</h2>
+
+    <div *ngIf="isLoading" class="loading">Загрузка...</div>
+
+    <div class="user-create">
+        <button (click)="addUser()">Добавить</button>
+        <div *ngIf="showForm" class="user-form">
+            <div class="form-group">
+                <label>Имя</label>
+                <br>
+                <input type="text"
+                [(ngModel)] = "user.name"
+                placeholder="Введите Ваше имя"
+                class="form-control"
+                required>
+            </div>
+
+            <div class="form-group">
+                <label>Логин</label>
+                <br>
+                <input type="text"
+                [(ngModel)] = "user.login"
+                placeholder="Введите логин"
+                class="form-control"
+                required>
+            </div>
+
+            <div class="form-group">
+                <label>Пароль</label>
+                <br>
+                <input type="password"
+                [(ngModel)] = "user.password"
+                placeholder="Введите пароль"
+                class="form-control"
+                required>
+            </div>
+
+            <button (click)="createUser()">Создать</button>
+            <button (click)="cancelForm()">Отменить</button>
+            
+        </div>
+        </div>
+    <div *ngIf="successMessage" class="success">Пользователь создана!</div>
+    <div *ngIf="errorMessage" class="error">Пользователь не создан, возникла ошибка</div>
+    </div>
+</div>
