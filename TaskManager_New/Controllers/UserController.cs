@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TaskManager_New.DTOs;
 using TaskManager_New.Services;
 using TaskManager_New.Services.Users;
@@ -23,6 +24,7 @@ namespace TaskManager_New.Controllers
         /// Получение списка всех пользователей
         /// </summary>
         [HttpGet]
+        [Authorize]
         [Route("User/GetAllUsers")]
         public async Task<IActionResult> GetAllUsers()
         {
@@ -43,6 +45,7 @@ namespace TaskManager_New.Controllers
         /// </summary>
         /// <param name="id">ID пользователя</param>
         [HttpGet]
+        [Authorize]
         [Route("User/GetTasksByUser")]
         public async Task<IActionResult> GetTasksByUser([FromQuery] int id)
         {
@@ -64,6 +67,7 @@ namespace TaskManager_New.Controllers
         /// </summary>
         /// <param name="model">Модель пользователя</param>
         [HttpPost]
+        [Authorize]
         [Route("User/CreateUser")]
         public async Task<IActionResult> CreateUser(UserApiModel model)
         {
@@ -92,6 +96,7 @@ namespace TaskManager_New.Controllers
         /// </summary>
         /// <param name="userLogin">Логин удаляемого пользователя</param>
         [HttpDelete]
+        [Authorize]
         [Route("User/DeleteUser")]
         public async Task<IActionResult> DeleteUser([FromQuery] string? userLogin)
         {

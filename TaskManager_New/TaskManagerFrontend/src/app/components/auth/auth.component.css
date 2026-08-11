@@ -1,0 +1,214 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap');
+
+.page-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+  background: linear-gradient(135deg, #462446 0%, #47b39d 100%);
+}
+
+.login-container {
+    max-width: 450px;
+    width: 100%;
+    padding: 50px 40px;
+    background: #47b39d;
+    border-radius: 15px;
+    box-shadow: 0 10px 40px rgba(70, 36, 70, 0.15);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+h2{
+    color: #462446;
+    font-size: 28px;
+    font-weight: 700;
+    font-family: 'Montserrat', sans-serif;
+    letter-spacing: 3px;
+    margin-bottom: 35px;
+    text-align: center;
+}
+
+.auth {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group{
+    color: #462446;
+    width: 100%;
+    display: flex;
+    font-family: 'Montserrat', sans-serif;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid #e8dce8;
+    border-radius: 10px;
+    font-size: 15px;
+    font-family: 'Montserrat', sans-serif;
+    box-sizing: border-box;
+    background: #faf8fa;
+    transition: all 0.3s ease;
+    color: #462446;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #b05f6d;
+    background: white;
+    box-shadow: 0 0 0 4px rgba(176, 95, 109, 0.1);
+}
+
+.form-control::placeholder {
+    color: #bbb;
+    font-weight: 400;
+}
+
+.options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 5px 0 10px 0;
+    width: 100%;
+}
+
+.checkbox-label {
+    color: #462446;
+    font-size: 14px;
+    font-family: 'Montserrat', sans-serif;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-primary{
+  flex: 1; 
+  background: #7e557e; 
+  color: white;  
+  padding: 14px 20px;
+  border: none; 
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: 'Montserrat', sans-serif;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
+}
+
+.btn-primary:hover {
+  background: #462446; 
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(176, 95, 109, 0.3);
+}
+
+.btn-secondary {
+  flex: 1;  
+  background: #e8dce8;
+  color: #462446;
+  padding: 14px 20px;
+  border: none;  
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: 'Montserrat', sans-serif;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
+}
+
+.btn-secondary:hover {
+  background: #d8cbd8;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(70, 36, 70, 0.15);
+}
+
+.button-group{
+    display: flex;
+    gap: 20px;
+}
+
+
+/* .success {
+    color: #155724;
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    padding: 10px;
+    border-radius: 6px;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.error {
+    color: #482e49;
+    padding: 10px;
+    border-radius: 6px;
+    font-weight: 500;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.message-box{
+    height: 40px;              
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.loading {
+    height: 40px;           
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #462446;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    animation: pulse 1.5s ease-in-out infinite;
+    margin: 0;       
+} */
+
+.message-box {
+    height: 45px;              /* 👈 ФИКСИРОВАННАЯ ВЫСОТА */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+    overflow: hidden;          /* 👈 Чтобы ничего не вылезало */
+}
+
+.loading, .error, .success {
+    width: 100%;
+    padding: 8px 12px;
+    border-radius: 6px;
+    text-align: center;
+    font-size: 14px;
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.loading {
+    color: #462446;
+    font-weight: 600;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+.error {
+    color: #482e49;
+}
+
+.success {
+    color: #482e49;
+}

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TaskManager.Models;
 using TaskManager_New.DTOs;
 using TaskManager_New.Services;
 
@@ -11,7 +12,7 @@ namespace TaskManager_New.Controllers
 
         public AuthController(IAuthService authService)
         {
-            authService = _authService;
+            _authService = authService;
         }
 
         /// <summary>
@@ -19,12 +20,12 @@ namespace TaskManager_New.Controllers
         /// </summary>
         [HttpPost]
         [Route("Auth/Token")]
-        public async Task<IActionResult> GeneratieToken([FromBody] TokenRequestDto request)
+        public async Task<IActionResult> GenerateToken([FromBody] AuthRequest authRequest)
         {
             try
             {
-                var result = _authService.GeneratieToken(request);
-                return Ok(result);
+                var token = await _authService.GenerateToken(authRequest.Login, authRequest.Password);
+                return Ok(new { token = token });
             }
             catch(Exception ex)
             {

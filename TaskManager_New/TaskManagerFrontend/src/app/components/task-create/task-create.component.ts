@@ -9,7 +9,7 @@ import { TaskService } from '../../services/task.service';
     standalone: true,
     imports: [CommonModule, FormsModule],
     templateUrl: './task-create.component.html',
-    styleUrls: ['./task-create.component.css']
+    styleUrl: './task-create.component.css'
 })
 
 export class TaskCreateComponent{
@@ -42,7 +42,6 @@ export class TaskCreateComponent{
     }
 
     createTask(): void{
-        console.log('✅ createTask вызван!');
         if(this.task.title.trim() == "" || this.task.userId === 0){
             this.errorMessage = 'Необходимо заполнить все поля';
             return
@@ -58,7 +57,6 @@ export class TaskCreateComponent{
             this.task.userId
         ).subscribe({
             next: (createdTask) => {
-                console.log('✅ next вызван!', createdTask);
                 this.successMessage = `Задача ${createdTask.title} создана!`;
                 this.task = {
                     title: '',

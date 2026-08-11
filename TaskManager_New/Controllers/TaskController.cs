@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TaskManager_New.DTOs;
 using TaskManager_New.Services;
 
@@ -21,6 +22,7 @@ namespace TaskManager_New.Controllers
         /// Получение всех задач
         /// </summary>
         [HttpGet]
+        [Authorize]
         [Route("Tasks/GetAllTasks")]
         public async Task<IActionResult> GetAllTasks()
         {
@@ -42,6 +44,7 @@ namespace TaskManager_New.Controllers
         /// </summary>
         /// <param name="title">Название задачи</param>
         [HttpGet]
+        [Authorize]
         [Route("Tasks/GetTaskByTitle")]
         public async Task<IActionResult> GetTaskByName([FromQuery] string title)
         {
@@ -67,6 +70,7 @@ namespace TaskManager_New.Controllers
         /// </summary>
         /// <param name="model">Модель задачи</param>
         [HttpPost]
+        [Authorize]
         [Route("Tasks/CreateTask")]
         public async Task<IActionResult> CreateTask([FromBody] TaskApiModel model)
         {
@@ -93,6 +97,7 @@ namespace TaskManager_New.Controllers
         /// <param name="title">Название удаляемой задачи</param>
         /// <param name="userId">ID владельца задачи</param>
         [HttpDelete]
+        [Authorize]
         [Route("Tasks/DeleteTask")]
         public async Task<IActionResult> DeleteTask([FromQuery] string title, [FromQuery] int userId)
         {

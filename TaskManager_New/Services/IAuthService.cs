@@ -11,6 +11,6 @@ namespace TaskManager_New.Services
         //Task<bool> ChangePassword(int iserId, string oldPasword, string newPassword);
         //Task<bool> ValidateToken(string token);
         //Task<User> GetUserByToken(string token);
-        string GeneratieToken(TokenRequestDto request);
+        Task<string> GenerateToken(string login, string password);
     }
 }
