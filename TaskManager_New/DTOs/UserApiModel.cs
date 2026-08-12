@@ -1,4 +1,4 @@
-﻿using TaskManager.Models;
+﻿using TaskManager_New.Models;
 
 namespace TaskManager_New.DTOs
 {
@@ -7,6 +7,7 @@ namespace TaskManager_New.DTOs
         public string Name { get; set; }
         public string Login { get; set; }
         public string Password { get; set; }
+        public bool Notification {  get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }

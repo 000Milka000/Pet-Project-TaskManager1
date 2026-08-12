@@ -6,7 +6,8 @@ using System.Reflection.Metadata.Ecma335;
 using System.Xml.Linq;
 using TaskManager_New.Data;
 using TaskManager_New.DTOs;
-using TaskManager.Models;
+using TaskManager_New.Models;
+
 
 namespace TaskManager_New.Services.Users
 {
@@ -55,6 +56,7 @@ namespace TaskManager_New.Services.Users
                 Name = model.Name,
                 Login = model.Login,
                 Password = BCrypt.Net.BCrypt.HashPassword(model.Password),
+                Notification = model.Notification,
                 CreatedAt = DateTime.UtcNow
             };
             _context.Add(user);
@@ -84,6 +86,16 @@ namespace TaskManager_New.Services.Users
                 return true;
             }
             return false;
+        }
+
+
+        /// <summary>
+        /// Поиск юзера по ID
+        /// </summary>
+        public async Task<User?> GetUserByID (int id)
+        {
+                return await _context.Users
+                .FirstOrDefaultAsync(x => x.Id == id);
         }
 
 

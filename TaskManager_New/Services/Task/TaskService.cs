@@ -2,7 +2,10 @@
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using TaskManager_New.Data;
-using TaskManager.Models;
+using TaskManager_New.Services.Notifications;
+using TaskManager_New.Services.Users;
+using TaskManager_New.Models;
+
 
 
 namespace TaskManager_New.Services.Task
@@ -10,10 +13,14 @@ namespace TaskManager_New.Services.Task
     public class TaskServices : ITaskServices
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserServices _userServices;
+        private readonly NotificationService _notificationService;
 
-        public TaskServices(ApplicationDbContext context)
+        public TaskServices(ApplicationDbContext context, UserServices userServices, NotificationService notificationService)
         {
             _context = context;
+            _userServices = userServices;
+            _notificationService = notificationService;
         }
 
 
@@ -74,9 +81,15 @@ namespace TaskManager_New.Services.Task
                     UserId = userId
                 };
 
+                var user = await _userServices.GetUserByID(userId);
                 _context.Add(task);
                 await _context.SaveChangesAsync();
-                return task;
+                if (user != null && user.Notification)
+                {
+                    await _notificationService.SendNotificationAsync(user.Name, $"Создана задача: {title}");
+                }
+                    return task;
+                
             }
             catch (DbUpdateException ex) when (ex.InnerException is PostgresException pg && pg.SqlState == "23505")
             {

@@ -2,16 +2,35 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
 using System.Text;
+using System.Threading.Channels;
 using TaskManager_New.Data;
+using TaskManager_New.Models;
 using TaskManager_New.Services;
 using TaskManager_New.Services.Auth;
+using TaskManager_New.Services.Notification;
+using TaskManager_New.Services.Notifications;
 using TaskManager_New.Services.Task;
 using TaskManager_New.Services.Users;
 
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Information()
+    .Enrich.FromLogContext()
+    .WriteTo.Console()
+    .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day, fileSizeLimitBytes: 10485760, rollOnFileSizeLimit: true)
+    .CreateLogger();
 
 var builder = WebApplication.CreateBuilder(args);
+var channel = Channel.CreateBounded<NotificationEntity>(
+    new BoundedChannelOptions(100)
+    {
+        FullMode = BoundedChannelFullMode.Wait
+    });
 
+builder.Services.AddSingleton(channel);
+builder.Services.AddSingleton(channel.Reader);
+builder.Services.AddSingleton(channel.Writer);
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAngular",
@@ -68,11 +87,19 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
+builder.Host.UseSerilog(Log.Logger);
 builder.Services.AddAuthorization();
+//builder.Services.AddLogging();
+builder.Services.AddScoped<TaskServices>();     
+builder.Services.AddScoped<UserServices>();       
+builder.Services.AddScoped<AuthService>();      
+builder.Services.AddScoped<NotificationService>();
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<ITaskServices, TaskServices>();
 builder.Services.AddScoped<IUserServices, UserServices>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddHostedService<NotificationBackgroundService>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
